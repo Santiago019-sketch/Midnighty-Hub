@@ -3,7 +3,7 @@
 
 -- Configuration
 local KeySystem = true -- Set to false to disable key system
-local Key = "MidnightyHubOnTop" -- Changed to the requested key
+local Key = "MidnightyHubOnTop" -- Key for accessing the scripts
 
 -- Game IDs and their corresponding script URLs
 local GameScripts = {
@@ -14,106 +14,103 @@ local GameScripts = {
     [16732694052] = "https://raw.githubusercontent.com/Santiago019-sketch/Fisch-Rev/refs/heads/main/ByOgSunny"
 }
 
--- Libraries
-local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/GreenDeno/Venyx-UI-Library/main/source.lua"))()
-local notificationLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Jxereas/UI-Libraries/main/notification_gui_library.lua", true))()
+-- Services
+local Players = game:GetService("Players")
+local HttpService = game:GetService("HttpService")
 
--- Create Main Hub
-local MainHub = library.new("Universal Game Hub", 5013109572)
+-- Create ScreenGui
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "MidnightHubGui"
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
 
--- Check if game is supported
-local gameId = game.PlaceId
-local scriptUrl = GameScripts[gameId]
-local isGameSupported = scriptUrl ~= nil
+-- Create Main Frame
+local MainFrame = Instance.new("Frame")
+MainFrame.Size = UDim2.new(0, 300, 0, 200)
+MainFrame.Position = UDim2.new(0.5, -150, 0.5, -100)
+MainFrame.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+MainFrame.BorderSizePixel = 0
+MainFrame.Parent = ScreenGui
 
--- Function to execute the game-specific script
-local function ExecuteGameScript()
-    if isGameSupported then
-        notificationLib:SendNotification("Success", "Loading script for game: " .. game:GetService("MarketplaceService"):GetProductInfo(gameId).Name, 5)
-        loadstring(game:HttpGet(scriptUrl))()
+-- Create Title
+local Title = Instance.new("TextLabel")
+Title.Size = UDim2.new(1, 0, 0, 50)
+Title.Position = UDim2.new(0, 0, 0, 0)
+Title.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+Title.BorderSizePixel = 0
+Title.Text = "Midnight Hub"
+Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextScaled = true
+Title.Parent = MainFrame
+
+-- Create Key Input
+local KeyInput = Instance.new("TextBox")
+KeyInput.Size = UDim2.new(0.8, 0, 0, 30)
+KeyInput.Position = UDim2.new(0.1, 0, 0.3, 0)
+KeyInput.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+KeyInput.BorderSizePixel = 0
+KeyInput.PlaceholderText = "Enter Key"
+KeyInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+KeyInput.TextScaled = true
+KeyInput.Parent = MainFrame
+
+-- Create Submit Button
+local SubmitButton = Instance.new("TextButton")
+SubmitButton.Size = UDim2.new(0.8, 0, 0, 30)
+SubmitButton.Position = UDim2.new(0.1, 0, 0.5, 0)
+SubmitButton.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+SubmitButton.BorderSizePixel = 0
+SubmitButton.Text = "Submit Key"
+SubmitButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+SubmitButton.TextScaled = true
+SubmitButton.Parent = MainFrame
+
+-- Create Discord Link
+local DiscordButton = Instance.new("TextButton")
+DiscordButton.Size = UDim2.new(0.8, 0, 0, 30)
+DiscordButton.Position = UDim2.new(0.1, 0, 0.7, 0)
+DiscordButton.BackgroundColor3 = Color3.fromRGB(72, 85, 99)
+DiscordButton.BorderSizePixel = 0
+DiscordButton.Text = "Join Discord"
+DiscordButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+DiscordButton.TextScaled = true
+DiscordButton.Parent = MainFrame
+
+-- Function to handle key submission
+local function OnSubmitKey()
+    if KeyInput.Text == Key then
+        print("Key confirmed!")
+        -- Execute the game-specific script
+        local gameId = game.PlaceId
+        local scriptUrl = GameScripts[gameId]
+        if scriptUrl then
+            local success, result = pcall(function()
+                return loadstring(game:HttpGet(scriptUrl))()
+            end)
+            if success then
+                print("Script executed successfully!")
+            else
+                warn("Failed to execute script:", result)
+            end
+        else
+            warn("No script available for this game.")
+        end
     else
-        notificationLib:SendNotification("Error", "This game is not supported!", 5)
+        print("Invalid key!")
     end
 end
 
--- Create notification function
-local function Notify(title, text, duration)
-    notificationLib:SendNotification(title, text, duration or 3)
+-- Function to open Discord link
+local function OpenDiscord()
+    local DiscordLink = "https://discord.gg/your-invite-code"
+    syn.request({
+        Url = DiscordLink,
+        Method = "GET"
+    })
 end
 
--- Create pages
-local homePage = MainHub:addPage("Home", 5012544693)
-local keyPage = MainHub:addPage("Key System", 5012544693)
-local infoPage = MainHub:addPage("Information", 5012544693)
+-- Connect buttons to functions
+SubmitButton.MouseButton1Click:Connect(OnSubmitKey)
+DiscordButton.MouseButton1Click:Connect(OpenDiscord)
 
--- Home Page
-local homeSection = homePage:addSection("Game Hub")
-
-if isGameSupported then
-    homeSection:addButton("Execute Script", function()
-        if not KeySystem or _G.KeyConfirmed then
-            ExecuteGameScript()
-        else
-            Notify("Key Required", "Please enter the key in the Key System tab", 5)
-            MainHub:selectPage(keyPage)
-        end
-    end)
-    
-    homeSection:addLabel("Current Game: " .. game:GetService("MarketplaceService"):GetProductInfo(gameId).Name)
-else
-    homeSection:addLabel("Current Game: Not Supported")
-    homeSection:addLabel("Game ID: " .. gameId)
-end
-
--- Key System Page
-local keySection = keyPage:addSection("Authentication")
-
-if KeySystem then
-    local keyInput
-    
-    keySection:addTextbox("Enter Key", "", function(value)
-        keyInput = value
-    end)
-    
-    keySection:addButton("Submit Key", function()
-        if keyInput == Key then
-            _G.KeyConfirmed = true
-            Notify("Success", "Key confirmed! You can now execute scripts.", 5)
-            MainHub:selectPage(homePage)
-        else
-            Notify("Error", "Invalid key! Please try again.", 5)
-        end
-    end)
-    
-    keySection:addLabel("Get the key from the owner")
-else
-    keySection:addLabel("Key System is disabled")
-end
-
--- Information Page
-local infoSection = infoPage:addSection("Supported Games")
-
-for id, _ in pairs(GameScripts) do
-    local success, result = pcall(function()
-        return game:GetService("MarketplaceService"):GetProductInfo(id).Name
-    end)
-    
-    local gameName = success and result or "Unknown Game"
-    infoSection:addLabel(gameName .. " (ID: " .. id .. ")")
-end
-
--- Add credits section
-local creditsSection = infoPage:addSection("Credits")
-creditsSection:addLabel("Hub created by: Your Name Here")
-creditsSection:addLabel("Scripts by their respective creators")
-
--- Initialize UI
-MainHub:SelectPage(homePage)
-
--- Final notification
-Notify("Hub Loaded", "Welcome to the Universal Game Hub!", 5)
-if isGameSupported then
-    Notify("Game Detected", "This game is supported!", 3)
-else
-    Notify("Game Not Supported", "Current game is not in the database", 3)
-end
+-- Notify the player
+print("Midnight Hub GUI loaded!")
