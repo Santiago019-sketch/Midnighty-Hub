@@ -1,0 +1,119 @@
+-- Universal Hub Script with Key System
+-- Created by Claude
+
+-- Configuration
+local KeySystem = true -- Set to false to disable key system
+local Key = "MidnightyHubOnTop" -- Changed to the requested key
+
+-- Game IDs and their corresponding script URLs
+local GameScripts = {
+    [124436699527543] = "https://raw.githubusercontent.com/Santiago019-sketch/Strongest-Lifting-Simulator/refs/heads/main/Midnight%20Hub",
+    [16784977282] = "https://raw.githubusercontent.com/Santiago019-sketch/Super-Sayian-Simulator-2-midnight/refs/heads/main/Midnight%20super%20sayian%20sim%202",
+    [9285238704] = "https://raw.githubusercontent.com/Santiago019-sketch/Race-Clicker-Midnight/refs/heads/main/Race%20clicker%20Midnight%20Hub",
+    [5490351219] = "https://raw.githubusercontent.com/Santiago019-sketch/Clicker-Madneess-Midnight-Hub/refs/heads/main/Clicker%20Madness",
+    [16732694052] = "https://raw.githubusercontent.com/Santiago019-sketch/Fisch-Rev/refs/heads/main/ByOgSunny"
+}
+
+-- Libraries
+local library = loadstring(game:HttpGet("https://raw.githubusercontent.com/GreenDeno/Venyx-UI-Library/main/source.lua"))()
+local notificationLib = loadstring(game:HttpGet("https://raw.githubusercontent.com/Jxereas/UI-Libraries/main/notification_gui_library.lua", true))()
+
+-- Create Main Hub
+local MainHub = library.new("Universal Game Hub", 5013109572)
+
+-- Check if game is supported
+local gameId = game.PlaceId
+local scriptUrl = GameScripts[gameId]
+local isGameSupported = scriptUrl ~= nil
+
+-- Function to execute the game-specific script
+local function ExecuteGameScript()
+    if isGameSupported then
+        notificationLib:SendNotification("Success", "Loading script for game: " .. game:GetService("MarketplaceService"):GetProductInfo(gameId).Name, 5)
+        loadstring(game:HttpGet(scriptUrl))()
+    else
+        notificationLib:SendNotification("Error", "This game is not supported!", 5)
+    end
+end
+
+-- Create notification function
+local function Notify(title, text, duration)
+    notificationLib:SendNotification(title, text, duration or 3)
+end
+
+-- Create pages
+local homePage = MainHub:addPage("Home", 5012544693)
+local keyPage = MainHub:addPage("Key System", 5012544693)
+local infoPage = MainHub:addPage("Information", 5012544693)
+
+-- Home Page
+local homeSection = homePage:addSection("Game Hub")
+
+if isGameSupported then
+    homeSection:addButton("Execute Script", function()
+        if not KeySystem or _G.KeyConfirmed then
+            ExecuteGameScript()
+        else
+            Notify("Key Required", "Please enter the key in the Key System tab", 5)
+            MainHub:selectPage(keyPage)
+        end
+    end)
+    
+    homeSection:addLabel("Current Game: " .. game:GetService("MarketplaceService"):GetProductInfo(gameId).Name)
+else
+    homeSection:addLabel("Current Game: Not Supported")
+    homeSection:addLabel("Game ID: " .. gameId)
+end
+
+-- Key System Page
+local keySection = keyPage:addSection("Authentication")
+
+if KeySystem then
+    local keyInput
+    
+    keySection:addTextbox("Enter Key", "", function(value)
+        keyInput = value
+    end)
+    
+    keySection:addButton("Submit Key", function()
+        if keyInput == Key then
+            _G.KeyConfirmed = true
+            Notify("Success", "Key confirmed! You can now execute scripts.", 5)
+            MainHub:selectPage(homePage)
+        else
+            Notify("Error", "Invalid key! Please try again.", 5)
+        end
+    end)
+    
+    keySection:addLabel("Get the key from the owner")
+else
+    keySection:addLabel("Key System is disabled")
+end
+
+-- Information Page
+local infoSection = infoPage:addSection("Supported Games")
+
+for id, _ in pairs(GameScripts) do
+    local success, result = pcall(function()
+        return game:GetService("MarketplaceService"):GetProductInfo(id).Name
+    end)
+    
+    local gameName = success and result or "Unknown Game"
+    infoSection:addLabel(gameName .. " (ID: " .. id .. ")")
+end
+
+-- Add credits section
+local creditsSection = infoPage:addSection("Credits")
+creditsSection:addLabel("Hub created by: Your Name Here")
+creditsSection:addLabel("Scripts by their respective creators")
+
+-- Initialize UI
+MainHub:SelectPage(homePage)
+
+-- Final notification
+Notify("Hub Loaded", "Welcome to the Universal Game Hub!", 5)
+if isGameSupported then
+    Notify("Game Detected", "This game is supported!", 3)
+else
+    Notify("Game Not Supported", "Current game is not in the database", 3)
+end
