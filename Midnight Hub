@@ -1,4 +1,4 @@
--- Universal Hub Script with Key System
+-- Universal Hub Script with Enhanced Key System
 -- Created by Claude
 
 -- Configuration
@@ -87,7 +87,8 @@ local function Notify(title, text, duration)
     StarterGui:SetCore("SendNotification", {
         Title = title,
         Text = text,
-        Duration = duration or 5
+        Duration = duration or 5,
+        Icon = "rbxassetid://143852998" -- Add a custom icon if desired
     })
 end
 
@@ -104,6 +105,9 @@ local function OnSubmitKey()
             end)
             if success then
                 Notify("Success", "Script executed successfully!", 5)
+                -- Close the key system UI
+                MainFrame:Destroy()
+                Notify("Thank You", "Thank you for using Midnight Hub!", 5)
             else
                 Notify("Error", "Failed to execute script: " .. result, 5)
             end
