@@ -572,7 +572,7 @@ local function OpenDiscord()
             Method = "POST",
             Headers = {
                 ["Content-Type"] = "application/json",
-                ["Origin"] = "https://discord.com"
+                ["Origin"] = "https://discord.gg/9Gz77Td5wh"
             },
             Body = HttpService:JSONEncode({
                 cmd = "INVITE_BROWSER",
