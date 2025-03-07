@@ -11,7 +11,7 @@ local GameScripts = {
     [16784977282] = "https://raw.githubusercontent.com/Santiago019-sketch/Super-Sayian-Simulator-2-midnight/refs/heads/main/Midnight%20super%20sayian%20sim%202",
     [9285238704] = "https://raw.githubusercontent.com/Santiago019-sketch/Race-Clicker-Midnight/refs/heads/main/Race%20clicker%20Midnight%20Hub",
     [5490351219] = "https://raw.githubusercontent.com/Santiago019-sketch/Clicker-Madneess-Midnight-Hub/refs/heads/main/Clicker%20Madness",
-    [16732694052] = "https://github.com/Santiago019-sketch/Fichy/blob/main/MidnightHub",
+    [16732694052] = "https://raw.githubusercontent.com/Santiago019-sketch/Fichy/refs/heads/main/MidnightHub",
     [3623096087] = "https://raw.githubusercontent.com/Santiago019-sketch/Midnight/refs/heads/main/Muscle%20Legends%20%7C%20Midnigt%20Hub",
     [574407221] = "https://raw.githubusercontent.com/Santiago019-sketch/Super-Hero-Tycoon/main/Main.lua"
 }
