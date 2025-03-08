@@ -1,6 +1,6 @@
 -- Configuration
 local KeySystem = true -- Set to false to disable key system
-local Key = "MidnightyHubOnTop" -- Key for accessing the scripts
+local Key = "ILikeKeysKuzILikeKeys" -- Key for accessing the scripts
 
 -- Game IDs and their corresponding script URLs
 local GameScripts = {
