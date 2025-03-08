@@ -17,7 +17,9 @@ local GameScripts = {
     [5490351219] = "https://raw.githubusercontent.com/Santiago019-sketch/Clicker-Madneess-Midnight-Hub/main/Clicker%20Madness",
     [16732694052] = "https://raw.githubusercontent.com/Santiago019-sketch/Fichy/main/MidnightHub",
     [9285238704] = "https://raw.githubusercontent.com/Santiago019-sketch/Race-Clicker-Midnight/main/Race%20clicker%20Midnight%20Hub",
-    [16784977282] = "https://raw.githubusercontent.com/Chaosscripter/Riotscripter/refs/heads/main/Super%20Saiyan%20Simulator%202%20V202",
+    [16784977282] = "https://raw.githubusercontent.com/Chaosscripter/Riotscripter/refs/heads/main/Super%20Saiyan%20Simulator%202%20V2", -- World 1
+    [16785155911] = "https://raw.githubusercontent.com/Chaosscripter/Riotscripter/refs/heads/main/Super%20Saiyan%20Simulator%202%20V2", -- World 2
+    [16785157439] = "https://raw.githubusercontent.com/Chaosscripter/Riotscripter/refs/heads/main/Super%20Saiyan%20Simulator%202%20V2", -- World 3
     [10036491877] = "https://raw.githubusercontent.com/Santiago019-sketch/Strongest-Lifting-Simulator/main/Midnight%20Hub",
     [7803783827] = "https://raw.githubusercontent.com/Chaosscripter/Riotscripter/main/Gyyat%20Simulator" -- Gyyat Simulator added back
 }
